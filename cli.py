@@ -1,41 +1,44 @@
 import random
 import time
-import sqlite3
+from animalsdb import AnimalsDB
+from lighthousesdb import LightHousesDB
+from programmersdb import ProgrammersDB
+from citiesdb import CitiesDB
 
 
-class AnimalsDB:
-    def __init__(self, database):
-        self.connect = sqlite3.connect(database)
-        self.cursor = self.connect.cursor()
+# class AnimalsDB:
+#     def __init__(self, database):
+#         self.connect = sqlite3.connect(database)
+#         self.cursor = self.connect.cursor()
 
-    def new_word(self, word):
-        check = 'INSERT OR IGNORE INTO animals (word) VALUES (?)'
-        self.cursor.execute(check, (word,))
-        self.connect.commit()
+#     def new_word(self, word):
+#         self.cursor.execute(
+#             'INSERT OR IGNORE INTO animals (word) VALUES (?)', (word))
+#         self.connect.commit()
 
-    def get_words(self):
-        self.cursor.execute('SELECT * FROM animals')
+#     def list_words(self):
+#         self.cursor.execute('SELECT word FROM animals')
+#         words = self.cursor.fetchall()
+#         my_list = [(word[0]) for word in words]
+#         return (my_list)
 
-    def list_all(self):
-        self.cursor.execute('SELECT * FROM animals')
-
-        for word in self.cursor.fetchall():
-            self.animals.append(word)
-
-    def close(self):
-        self.cursor.close()
-        self.connect.close()
+#     def close(self):
+#         self.cursor.close()
+#         self.connect.close()
 
 
 if __name__ == '__main__':
     animalsdb = AnimalsDB('database.db')
-
+    programmersdb = ProgrammersDB('database.db')
+    lighthousesdb = LightHousesDB('database.db')
+    citiesdb = CitiesDB('database.db')
+    animalsdb.list_words()
 
 print('''
                                                          _____
      ___  ____                   __   ____              / . . \ 
     /  / /   /                  /  \_/   /              \_____/
-   /  /_/   /___ _ ____  ____  /        /___ _____         | 
+   /  /_/   /___ _ ____  ____  /        /___ _____         |
   /  ___   / __ `/  __ \/ __ `/  /\_/  / __ `/ __ \       \|/
  /  /  /  / /_/ / /  / / /_/ /  /  /  / /_/ / / / /        |
 /__/  /__/\__,_/_/  /_/\__, /__/  /__/\__,_/_/ /_/       _/ \_
@@ -44,6 +47,10 @@ print('''
 
 ''')
 print("\nWelcome to Hangman game\n")
+category = input(
+    'Choose a category \n 1)Animals \n 2)Cities \n 3)Programmers by last name \n 4)Light Houses')
+if category == "1":
+    category = 'animalsdb'
 
 
 # The parameters we require to execute the game:
@@ -54,7 +61,8 @@ def main():
     global already_guessed
     global length
     global play_game
-    words_to_guess = ['Dog', 'Cat', 'Bird']
+    global category
+    words_to_guess = {category}.list_words()
     word = random.choice(words_to_guess)
     length = len(word)
     count = 0
