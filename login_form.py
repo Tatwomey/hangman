@@ -1,3 +1,5 @@
+from getpass4 import getpass
+
 class login:
     def __init__(self, id, password):
         self.id = id
@@ -12,4 +14,4 @@ class login:
 
 log = login("admin", "password")
 log.check(input("Enter Login ID: "),
-          input("Enter Password: "))
+          getpass("Enter Password: "))
