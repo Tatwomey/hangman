@@ -20,8 +20,3 @@ class AnimalsDB:
     def close(self):
         self.cursor.close()
         self.connect.close()
-
-
-if __name__ == '__main__':
-    animalsdb = AnimalsDB('database.db')
-    animalsdb.list_words()

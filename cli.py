@@ -39,7 +39,7 @@ print('''
      ___  ____                   __   ____              / . . \ 
     /  / /   /                  /  \_/   /              \_____/
    /  /_/   /___ _ ____  ____  /        /___ _____         |
-  /  ___   / __ `/  __ \/ __ `/  /\_/  / __ `/ __ \       \|/
+  /  ___   / __ `/  __ \/ __ `/  /\_/  / __ `/ __ \       \|/   
  /  /  /  / /_/ / /  / / /_/ /  /  /  / /_/ / / / /        |
 /__/  /__/\__,_/_/  /_/\__, /__/  /__/\__,_/_/ /_/       _/ \_
                       /____/
@@ -48,9 +48,18 @@ print('''
 ''')
 print("\nWelcome to Hangman game\n")
 category = input(
-    'Choose a category \n 1)Animals \n 2)Cities \n 3)Programmers by last name \n 4)Light Houses')
+    'Choose a category \n 1)Animals \n 2)Cities \n 3)Programmers by last name \n 4)Light Houses \n')
 if category == "1":
-    category = 'animalsdb'
+    words_to_guess = animalsdb.list_words()
+elif category == '2':
+    words_to_guess = citiesdb.list_words()
+elif category == '3':
+    words_to_guess = programmersdb.list_words()
+elif category == '4':
+    words_to_guess = lighthousesdb.list_words()
+else:
+    print('Pick a category by number 1 to 4')
+    exit()
 
 
 # The parameters we require to execute the game:
@@ -61,8 +70,6 @@ def main():
     global already_guessed
     global length
     global play_game
-    global category
-    words_to_guess = {category}.list_words()
     word = random.choice(words_to_guess)
     length = len(word)
     count = 0
@@ -78,9 +85,9 @@ def play_loop():
     play_game = input("Do You want to play again? y = yes, n = no \n")
     while play_game not in ["y", "n", "Y", "N"]:
         play_game = input("Do You want to play again? y = yes, n = no \n")
-    if play_game == "y":
+    if play_game == "y" or 'Y':
         main()
-    elif play_game == "n":
+    elif play_game == "n" or 'N':
         print("Thanks For Playing! We expect you back again!")
     add_word = input('Do you want to add a new word?')
     while add_word not in ['y', 'n', 'Y', 'N']:
@@ -179,7 +186,7 @@ def hangman():
                   "  |    / \ \n"
                   "__|__\n")
             print("Wrong guess. You are hanged!!!\n")
-            print("The word was:", already_guessed, word)
+            print("The word was:", word)
             play_loop()
 
     if word == '_' * length:
