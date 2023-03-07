@@ -4,6 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+tk = "*"
+getpass4 = "*"
 
 [dev-packages]
 
