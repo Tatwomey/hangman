@@ -5,28 +5,6 @@ from lighthousesdb import LightHousesDB
 from programmersdb import ProgrammersDB
 from citiesdb import CitiesDB
 
-
-# class AnimalsDB:
-#     def __init__(self, database):
-#         self.connect = sqlite3.connect(database)
-#         self.cursor = self.connect.cursor()
-
-#     def new_word(self, word):
-#         self.cursor.execute(
-#             'INSERT OR IGNORE INTO animals (word) VALUES (?)', (word))
-#         self.connect.commit()
-
-#     def list_words(self):
-#         self.cursor.execute('SELECT word FROM animals')
-#         words = self.cursor.fetchall()
-#         my_list = [(word[0]) for word in words]
-#         return (my_list)
-
-#     def close(self):
-#         self.cursor.close()
-#         self.connect.close()
-
-
 if __name__ == '__main__':
     animalsdb = AnimalsDB('database.db')
     programmersdb = ProgrammersDB('database.db')
@@ -34,26 +12,51 @@ if __name__ == '__main__':
     citiesdb = CitiesDB('database.db')
     animalsdb.list_words()
 
-print('''
+# The parameters we require to execute the game:
+
+
+print('''                
+
+
+
+                        WELCOME TO 
                                                          _____
      ___  ____                   __   ____              / . . \ 
     /  / /   /                  /  \_/   /              \_____/
    /  /_/   /___ _ ____  ____  /        /___ _____         |
-  /  ___   / __ `/  __ \/ __ `/  /\_/  / __ `/ __ \       \|/
+  /  ___   / __ `/  __ \/ __ `/  /\_/  / __ `/ __ \       \|/   
  /  /  /  / /_/ / /  / / /_/ /  /  /  / /_/ / / / /        |
 /__/  /__/\__,_/_/  /_/\__, /__/  /__/\__,_/_/ /_/       _/ \_
                       /____/
 
 
 ''')
-print("\nWelcome to Hangman game\n")
-category = input(
-    'Choose a category \n 1)Animals \n 2)Cities \n 3)Programmers by last name \n 4)Light Houses')
-if category == "1":
-    category = 'animalsdb'
 
 
-# The parameters we require to execute the game:
+# choose a category to play and later to add a new word to.
+
+
+def pick_catgory():
+    global category_picked
+    category = input(
+        'Choose a category \n 1)Animals \n 2)Cities \n 3)Programmers by last name \n 4)Light Houses \n')
+    if category == "1":
+        category_picked = animalsdb
+        print('You picked Animals')
+    elif category == '2':
+        category_picked = citiesdb
+        print('You picked Cities')
+    elif category == '3':
+        category_picked = programmersdb
+        print('You Picked Programmers by last name')
+    elif category == '4':
+        category_picked = lighthousesdb
+        print('You picked Light Houses')
+    else:
+        print('Pick a category by number 1 to 4')
+        exit()
+
+
 def main():
     global count
     global display
@@ -61,9 +64,7 @@ def main():
     global already_guessed
     global length
     global play_game
-    global category
-    words_to_guess = {category}.list_words()
-    word = random.choice(words_to_guess)
+    word = random.choice(category_picked.list_words())
     length = len(word)
     count = 0
     display = '_' * length
@@ -74,19 +75,23 @@ def main():
 
 
 def play_loop():
+    global word_picked
     global play_game
+    global add_word
     play_game = input("Do You want to play again? y = yes, n = no \n")
     while play_game not in ["y", "n", "Y", "N"]:
         play_game = input("Do You want to play again? y = yes, n = no \n")
     if play_game == "y":
         main()
     elif play_game == "n":
-        print("Thanks For Playing! We expect you back again!")
-    add_word = input('Do you want to add a new word?')
-    while add_word not in ['y', 'n', 'Y', 'N']:
-        add_word = input('Do you want to add a new word?')
-    # if add_word == 'y' or 'Y':
-    #     add_word_category = input('Pick a category to add your word')
+        add_word = input('Do you want to add a new word? \n ')
+        while add_word not in ['y', 'n', 'Y', 'N']:
+            add_word_input = input('Do you want to add a new word? \n')
+            if add_word_input == 'y' or 'Y':
+                pick_catgory()
+                word_picked = input('Type your word: \n')
+                add_word = category_picked.new_word(word_picked)
+            print("Thanks For Playing!")
         exit()
 
 # Initializing all the conditions required for the game:
@@ -179,7 +184,7 @@ def hangman():
                   "  |    / \ \n"
                   "__|__\n")
             print("Wrong guess. You are hanged!!!\n")
-            print("The word was:", already_guessed, word)
+            print("The word was:", word)
             play_loop()
 
     if word == '_' * length:
@@ -190,7 +195,6 @@ def hangman():
         hangman()
 
 
+pick_catgory()
 main()
-
-
 hangman()

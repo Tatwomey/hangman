@@ -8,7 +8,7 @@ class AnimalsDB:
 
     def new_word(self, word):
         self.cursor.execute(
-            'INSERT OR IGNORE INTO animals (word) VALUES (?)', (word))
+            'INSERT OR IGNORE INTO animals (word) VALUES (?)', (word,))
         self.connect.commit()
 
     def list_words(self):
@@ -20,8 +20,3 @@ class AnimalsDB:
     def close(self):
         self.cursor.close()
         self.connect.close()
-
-
-if __name__ == '__main__':
-    animalsdb = AnimalsDB('database.db')
-    animalsdb.list_words()
