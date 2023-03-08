@@ -5,16 +5,20 @@ from animalsdb import AnimalsDB
 from lighthousesdb import LightHousesDB
 from programmersdb import ProgrammersDB
 from citiesdb import CitiesDB
+from usersdb import UsersDB
 
 if __name__ == '__main__':
     animalsdb = AnimalsDB('database.db')
     programmersdb = ProgrammersDB('database.db')
     lighthousesdb = LightHousesDB('database.db')
     citiesdb = CitiesDB('database.db')
-    animalsdb.list_words()
+    usersdb = UsersDB('database.db')
+
 
 # The parameters we require to execute the game:
 
+# # choose a category to play and later to add a new word to.
+#
 
 print('''                
 
@@ -33,11 +37,36 @@ print('''
 
 ''')
 
-
+# choose a category to play and later to add a new word to.
 # choose a category to play and later to add a new word to.
 
 
-def pick_catgory():
+def user_login_signup():
+    global username
+    global password
+    global add_username
+    global add_password
+    has_username = input('Do you have a username? "y" = yes "n" = no \n')
+    if has_username == 'y':
+        print('Log in: \n')
+        username = input('Enter your username: \n')
+        if usersdb.search_user(f'{username}') == True:
+            password = input(f'Enter the password for {username} \n')
+            if usersdb.search_password(f'{password}') == True:
+                print('Welcome back!')
+                pick_category()
+                main()
+                hangman()
+    elif has_username == 'n':
+        create_user = input(
+            'Would you like to signup? "y" = yes "n" = no \n')
+        if create_user == 'y':
+            add_username = input('Pick a username: \n')
+            add_password = input(f'Pick a password for {add_username} \n')
+            usersdb.new_user(add_username, add_password, 0)
+
+
+def pick_category():
     global category_picked
     category = input(
         'Choose a category \n 1)Animals \n 2)Cities \n 3)Programmers by last name \n 4)Light Houses \n')
@@ -93,14 +122,13 @@ def play_loop():
             add_word_input = input(
                 'Do you want to add a new word? y = yes n = no \n')
         if add_word_input == 'y':
-            pick_catgory()
+            pick_category()
             word_picked = input('Type your word: \n')
             add_word = category_picked.new_word(word_picked)
             print("Thanks for Playing")
         else:
             print("Thanks For Playing!")
             exit()
-        exit()
 
 
 def hangman():
@@ -121,9 +149,10 @@ def hangman():
 
     elif guess in word:
         already_guessed.extend([guess])
-        index = word.find(guess)
-        word = word[:index] + "_" + word[index + 1:]
-        display = display[:index] + guess + display[index + 1:]
+        indices = [i for i, letter in enumerate(word) if letter == guess]
+        for index in indices:
+            word = word[:index] + "_" + word[index + 1:]
+            display = display[:index] + guess + display[index + 1:]
         print(display + "\n")
 
     elif guess in already_guessed:
@@ -194,22 +223,29 @@ def hangman():
     if word == '_' * length:
         print("""
 
-  __     __            __          __ _         _ 
+  __     __            __          __ _         _
   \ \   / /            \ \        / /(_)       | |
    \ \_/ /___   _   _   \ \  /\  / /  _  _ __  | |
     \   // _ \ | | | |   \ \/  \/ /  | || '_ \ | |
      | || (_) || |_| |    \  /\  /   | || | | ||_|
      |_| \___/  \__,_|     \/  \/    |_||_| |_|(_)
-                                                 
-                                                 
- 
+
+
         """)
-        play_loop()
+        username = input('What is your username?')
+        if usersdb.search_user(f'{username}') == True:
+            current_score = usersdb.search_score(f'{username}')
+            print(current_score)
+            new_score = int(current_score)
+            new_score += 1
+            usersdb.add_score(new_score, username)
+            play_loop()
 
     elif count != limit:
         hangman()
 
 
-pick_catgory()
-main()
-hangman()
+user_login_signup()
+# pick_category()
+# main()
+# hangman()
