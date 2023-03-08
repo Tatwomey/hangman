@@ -39,6 +39,25 @@ print('''
 
 # choose a category to play and later to add a new word to.
 # choose a category to play and later to add a new word to.
+def user_login_signup():
+    global username
+    global password
+    global add_username
+    global add_password
+    has_username = input('Do you have a username? "y" = yes "n" = no \n ')
+    if has_username == 'y':
+        print('Log in: \n')
+        username = input('Enter your username: \n')
+        password = input(f'Enter the password for {username} \n')
+        pick_catgory()
+        main()
+        hangman()
+    elif has_username == 'n':
+        create_user = input(
+            'Would you like to signup? "y" = yes "n" = no \n  ')
+        if create_user == 'y':
+            add_username = input('Pick a username: \n')
+            add_password = input(f'Pick a password for {username} \n')
 
 
 def user_login_signup():
