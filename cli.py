@@ -140,9 +140,10 @@ def hangman():
 
     elif guess in word:
         already_guessed.extend([guess])
-        index = word.find(guess)
-        word = word[:index] + "_" + word[index + 1:]
-        display = display[:index] + guess + display[index + 1:]
+        indices = [i for i, letter in enumerate(word) if letter == guess]
+        for index in indices:
+            word = word[:index] + "_" + word[index + 1:]
+            display = display[:index] + guess + display[index + 1:]
         print(display + "\n")
 
     elif guess in already_guessed:
