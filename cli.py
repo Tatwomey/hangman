@@ -64,6 +64,9 @@ def user_login_signup():
             add_username = input('Pick a username: \n')
             add_password = input(f'Pick a password for {add_username} \n')
             usersdb.new_user(add_username, add_password, 0)
+            pick_category()
+            main()
+            hangman()
 
 
 def pick_category():
